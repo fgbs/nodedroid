@@ -1,0 +1,32 @@
+{
+  "name": "nodedroid",
+  "version": "0.0.1",
+  "authors": [
+    "fgbs <felipe.barros@gmail.com>"
+  ],
+  "description": "android manager",
+  "main": "server.js",
+  "moduleType": [
+    "es6",
+    "globals",
+    "node"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.4",
+    "rdash-ui": "~1.0.1",
+    "angular-cookies": "~1.4.4",
+    "angular-bootstrap": "~0.13.3",
+    "angular-ui-router": "~0.2.15",
+    "bootstrap": "~3.3.5",
+    "font-awesome": "~4.4.0"
+  }
+}

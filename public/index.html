@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en" ng-app="RDash">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>RDash AngularJS</title>
+  <!-- STYLES -->
+  <!-- build:css lib/css/main.min.css -->
+  <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="vendor/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="vendor/rdash-ui/css/rdash.min.css">
+  <!-- endbuild -->
+  <!-- SCRIPTS -->
+  <!-- build:js lib/js/main.min.js -->
+  <script type="text/javascript" src="vendor/angular/angular.min.js"></script>
+  <script type="text/javascript" src="vendor/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+  <script type="text/javascript" src="vendor/angular-cookies/angular-cookies.min.js"></script>
+  <script type="text/javascript" src="vendor/angular-ui-router/angular-ui-router.min.js"></script>
+  <!-- endbuild -->
+  <!-- Custom Scripts -->
+  <script type="text/javascript" src="js/module.js"></script>
+  <script type="text/javascript" src="js/routes.js"></script>
+  <script type="text/javascript" src="js/controllers/master-ctrl.js"></script>
+  <script type="text/javascript" src="js/controllers/alert-ctrl.js"></script>
+  <script type="text/javascript" src="js/directives/loading.js"></script>
+  <script type="text/javascript" src="js/directives/widget-body.js"></script>
+  <script type="text/javascript" src="js/directives/widget-footer.js"></script>
+  <script type="text/javascript" src="js/directives/widget-header.js"></script>
+  <script type="text/javascript" src="js/directives/widget.js"></script>
+</head>
+<body ng-controller="MasterCtrl">
+  <div id="page-wrapper" ng-class="{'open': toggle}" ng-cloak>
+
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+      <ul class="sidebar">
+        <li class="sidebar-main">
+          <a ng-click="toggleSidebar()">
+            Dashboard
+            <span class="menu-icon glyphicon glyphicon-transfer"></span>
+          </a>
+        </li>
+        <li class="sidebar-title"><span>NAVIGATION</span></li>
+        <li class="sidebar-list">
+          <a href="#/">info <span class="menu-icon fa fa-info-circle"></span></a>
+        </li>
+        <li class="sidebar-list">
+          <a href="#/screen">Screen <span class="menu-icon fa fa-desktop"></span></a>
+        </li>
+        <li class="sidebar-list">
+          <a href="#/proxy">Proxy <span class="menu-icon fa fa-globe"></span></a>
+        </li>
+        <li class="sidebar-list">
+          <a href="#/term">Term <span class="menu-icon fa fa-terminal"></span></a>
+        </li>
+      </ul>
+      <div class="sidebar-footer">
+        <div class="col-xs-4">
+          <a href="https://github.com/rdash/rdash-angular" target="_blank">
+            Github
+          </a>
+        </div>
+        <div class="col-xs-4">
+          <a href="https://github.com/rdash/rdash-angular/README.md" target="_blank">
+            About
+          </a>
+        </div>
+        <div class="col-xs-4">
+          <a href="#">
+            Support
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- End Sidebar -->
+
+    <div id="content-wrapper">
+      <div class="page-content">
+
+        <!-- Main Content -->
+        <div ui-view></div>
+
+      </div><!-- End Page Content -->
+    </div><!-- End Content Wrapper -->
+  </div><!-- End Page Wrapper -->
+</body>
+</html>
