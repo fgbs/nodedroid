@@ -37,7 +37,7 @@ function InfoCtrl($scope) {
     options: {animation: false}
   }];
 
-  io.watch('answer', function (data) {
+  io.watch('cpu', function (data) {
     console.log(data);
     //$scope.answer = data.value;
     //$scope.$apply();
