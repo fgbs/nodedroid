@@ -67,20 +67,23 @@ client.listDevices()
  * List of API examples.
  */
 exports.getApi = function(req, res) {
-    client.listDevices()
-            .then(function(devices) {
-                return Promise.filter(devices, function(device) {
-                    return client.getFeatures(device.id)
-                        .then(function(features) {
-                            return features
-                        })
-                })
-            })
-            .then(function(supportedDevices) {
-                return supportedDevices;
-            })
-            .catch(function(err) {
-                return { message: 'Something went wrong: ' }
-            })
+  client.listDevices()
+    .then(function(devices) {
+      return Promise.filter(devices, function(device) {
+        return client.getFeatures(device.id)
+          .then(function(features) {
+            return features
+          })
+      })
+    })
+    .then(function(supportedDevices) {
+      return supportedDevices;
+    })
+    .catch(function(err) {
+      return { message: 'Something went wrong: ' }
+    })
+};
+
+exports.getProcStats = function(req, res) {
 
 };
