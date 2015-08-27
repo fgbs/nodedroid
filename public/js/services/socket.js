@@ -16,8 +16,8 @@ angular.module('io.service', []).
         socket = io.connect(conf.ioServer);
         socket.on(ioEvent, function (data) {
           return watches.hasOwnProperty(data.item) ? watches[data.item](data) : null;
-        });
-      ,
+        })
+      },
       emit: function (arguments) {
         return $http.get(apiServer + '/request', {params: arguments});
       },

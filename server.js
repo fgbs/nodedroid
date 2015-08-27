@@ -10,6 +10,7 @@ var errorHandler = require('errorhandler');
 var methodOverride = require('method-override');
 var path = require('path');
 var io = require('socket.io');
+var moment = require('moment');
 
 
 /**
@@ -20,6 +21,7 @@ var adb = require('adbkit');
 var readline = require('readline');
 var client = adb.createClient();
 
+var _this = this;
 
 /**
  * Create Express server.
@@ -77,10 +79,9 @@ getProcStat = function(callback) {
           client.openProcStat(device.id)
               .then(function(procs) {
                 return callback(procs);
-                  //console.log(procs);
-                  //procs.on('load', function(st) {
-                  //    console.log(st)
-                  //})
+                //procs.on('load', function(st) {
+                //    return callback(st)
+                //})
               })
       })
     })
@@ -90,17 +91,34 @@ getProcStat = function(callback) {
 };
 
 
-this.getCpus = function () {
+this.getCpus = function (socket) {
   return getProcStat(function(result) {
-    var item, _i, _len;
-    for (_i = 0, _len = result.length; _i < _len; _i++) {
-      item = result[_i];
-      if (typeof io !== "undefined" && io !== null) {
-        io.sockets.emit('chart', {
-          chartData: item
-        });
+    result.on('load', function (proc) {
+      for (var key in proc) {
+        point = {
+          cpu: key,
+          time: moment().unix(),
+          metric: {
+            'user': proc[key]['user'],
+            'system': proc[key]['system'],
+            'iowait': proc[key]['iowait']
+          }
+        }
+        console.log(point)
+        socket.emit('cpu', point);
       }
-    }
+    })
+
+    // 
+    // for (_i = 0, _len = result.length; _i < _len; _i++) {
+    //   item = result[_i];
+    //   if (typeof io !== "undefined" && io !== null) {
+    //     console.log(item);
+    //     //io.sockets.emit('chart', {
+    //     //  chartData: item
+    //     //});
+    //   }
+    // }
   });
 };
 
@@ -119,7 +137,7 @@ if (!module.parent) {
 
 listener.sockets.on('connection', function(socket) {
 
-  getProcStat();
+  _this.getCpus(socket);
 
   return socket.on('disconnect', function() {});
 });

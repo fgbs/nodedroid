@@ -34,7 +34,7 @@ angular.module('App')
   .run(function (io) {
     io.init({
       ioServer: 'http://localhost:3000',
-      apiServer: 'http://localhost:8080/api',
+      apiServer: 'http://localhost:3000',
       ioEvent: 'io.response'
     });
   });

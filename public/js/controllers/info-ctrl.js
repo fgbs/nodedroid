@@ -37,6 +37,22 @@ function InfoCtrl($scope) {
     options: {animation: false}
   }];
 
+  io.watch('answer', function (data) {
+    console.log(data);
+    //$scope.answer = data.value;
+    //$scope.$apply();
+  });
+
+  // $scope.$watch('cpu', function (value) {
+  //   console.log(value);
+  //   io.emit({item: 'question', newValue: newValue, oldValue: oldValue});
+  // });
+
+  // $scope.memory = {
+  //   labels:
+  //   series:
+  //   data:
+  // }
 
 };
 
