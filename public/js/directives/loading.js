@@ -4,7 +4,7 @@
  */
 
 angular
-    .module('RDash')
+    .module('App')
     .directive('rdLoading', rdLoading);
 
 function rdLoading() {

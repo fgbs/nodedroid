@@ -3,7 +3,7 @@
  */
 
 angular
-    .module('RDash')
+    .module('App')
     .directive('rdWidgetBody', rdWidgetBody);
 
 function rdWidgetBody() {
