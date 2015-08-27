@@ -89,6 +89,7 @@ getProcStat = function(callback) {
     });
 };
 
+
 this.getCpus = function () {
   return getProcStat(function(result) {
     var item, _i, _len;

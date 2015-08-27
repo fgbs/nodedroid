@@ -7,7 +7,6 @@ var client = adb.createClient();
 
 
 
-
 /*
 client.trackDevices()
   .then(function(tracker) {
@@ -43,7 +42,7 @@ battery
 
 */
 
-/*
+
 client.listDevices()
   .then(function(devices) {
     return Promise.filter(devices, function(device) {
@@ -59,13 +58,13 @@ client.listDevices()
   .catch(function(err) {
     console.error('Something went wrong:', err.stack)
   })
-*/
+
 
 
 /**
  * GET /api
  * List of API examples.
- */
+ *
 exports.getApi = function(req, res) {
   client.listDevices()
     .then(function(devices) {
@@ -87,3 +86,4 @@ exports.getApi = function(req, res) {
 exports.getProcStats = function(req, res) {
 
 };
+*/
