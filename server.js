@@ -9,13 +9,19 @@ var logger = require('morgan');
 var errorHandler = require('errorhandler');
 var methodOverride = require('method-override');
 var path = require('path');
+var io = require('socket.io');
+var moment = require('moment');
 
 
 /**
- * Load controllers.
+ * ADB Magic
  */
-var apiController = require('./adbapi');
+var Promise = require('bluebird');
+var adb = require('adbkit');
+var readline = require('readline');
+var client = adb.createClient();
 
+var _this = this;
 
 /**
  * Create Express server.
@@ -38,32 +44,11 @@ app.locals.pretty = false;
 
 
 /**
- * Router
- */
-var router = express.Router();
-
-router.get('/', function(req, res) {
-  apiController.getApi(req, res);
-});
-
-
-
-
-
-/**
  * routes
  */
 app.get('/', function(req, res){
   res.redirect('/index.html');
 });
-
-// REGISTER OUR ROUTES -------------------------------
-// all of our routes will be prefixed with /api
-app.use('/api', router);
-//app.get('/api', apiController.getApi);
-
-
-
 
 
 /**
@@ -78,22 +63,82 @@ app.use(function(req, res) {
 /**
  * 500 Error Handler.
  */
-app.use(errorHandler());
+app.use(errorHandler({
+  dumpExceptions: true,
+  showStack: true
+}));
+
+
+
+
+// get cpu stats
+getProcStat = function(callback) {
+  client.listDevices()
+    .then(function(devices) {
+      return Promise.filter(devices, function(device) {
+          client.openProcStat(device.id)
+              .then(function(procs) {
+                return callback(procs);
+                //procs.on('load', function(st) {
+                //    return callback(st)
+                //})
+              })
+      })
+    })
+    .catch(function(err) {
+      console.error('Something went wrong:', err.stack)
+    });
+};
+
+
+this.getCpus = function (socket) {
+  return getProcStat(function(result) {
+    result.on('load', function (proc) {
+      for (var key in proc) {
+        point = {
+          cpu: key,
+          time: moment().unix(),
+          metric: {
+            'user': proc[key]['user'],
+            'system': proc[key]['system'],
+            'iowait': proc[key]['iowait']
+          }
+        }
+        console.log(point)
+        socket.emit('cpu', point);
+      }
+    })
+
+    // 
+    // for (_i = 0, _len = result.length; _i < _len; _i++) {
+    //   item = result[_i];
+    //   if (typeof io !== "undefined" && io !== null) {
+    //     console.log(item);
+    //     //io.sockets.emit('chart', {
+    //     //  chartData: item
+    //     //});
+    //   }
+    // }
+  });
+};
+
+
+
 
 
 /**
  * Start Express server.
  */
+if (!module.parent) {
+  http_server = app.listen(app.get('port'));
+  listener = io.listen(http_server);
+  console.log("Express server listening on port %d", app.get('port'));
+}
 
-var io = require('socket.io').listen(app.listen(app.get('port')));
+listener.sockets.on('connection', function(socket) {
 
-io.sockets.on('connection', function (socket) {
-  socket.emit('message', { message: 'welcome to the chat' });
-  socket.on('send', function (data) {
-    io.sockets.emit('message', data);
-  });
+  _this.getCpus(socket);
+
+  return socket.on('disconnect', function() {});
 });
 
-//app.listen(app.get('port'), function() {
-//  console.log("✔ Express server listening on port %d in %s mode", app.get('port'), app.get('env'));
-//});
