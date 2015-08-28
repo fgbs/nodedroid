@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('App', ['ui.bootstrap', 'ui.router', 'ngCookies', 'chart.js', 'io.service']);
+angular.module('App', ['ui.bootstrap', 'ui.router', 'ngCookies', 'chart.js', 'socket.io']);
 
 /**
  * Route configuration for the RDash module.
@@ -31,10 +31,6 @@ angular.module('App')
         });
     }
   ])
-  .run(function (io) {
-    io.init({
-      ioServer: 'http://localhost:3000',
-      apiServer: 'http://localhost:3000',
-      ioEvent: 'io.response'
-    });
+  .config(function ($socketProvider) {
+    $socketProvider.setConnectionUrl('http://localhost:3000');
   });

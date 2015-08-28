@@ -3,9 +3,14 @@
  */
 
 angular.module('App')
-  .controller('InfoCtrl', ['$scope', InfoCtrl]);
+  .controller('InfoCtrl', ['$scope', '$socket', InfoCtrl]);
 
-function InfoCtrl($scope) {
+function InfoCtrl($scope, $socket) {
+
+  $socket.on('cpu', function (data) {
+    //$scope.serverResponse = data;
+    console.log(data);
+  });
 
   $scope.cpus = [{
     name: 'cpu0',
@@ -36,24 +41,6 @@ function InfoCtrl($scope) {
     data: [[65, 59, 80, 81, 56, 55, 40], [28, 48, 40, 19, 86, 27, 90]],
     options: {animation: false}
   }];
-
-  io.watch('cpu', function (data) {
-    console.log(data);
-    //$scope.answer = data.value;
-    //$scope.$apply();
-  });
-
-  // $scope.$watch('cpu', function (value) {
-  //   console.log(value);
-  //   io.emit({item: 'question', newValue: newValue, oldValue: oldValue});
-  // });
-
-  // $scope.memory = {
-  //   labels:
-  //   series:
-  //   data:
-  // }
-
 };
 
 

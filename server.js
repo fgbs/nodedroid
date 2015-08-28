@@ -79,9 +79,6 @@ getProcStat = function(callback) {
           client.openProcStat(device.id)
               .then(function(procs) {
                 return callback(procs);
-                //procs.on('load', function(st) {
-                //    return callback(st)
-                //})
               })
       })
     })
@@ -108,17 +105,6 @@ this.getCpus = function (socket) {
         socket.emit('cpu', point);
       }
     })
-
-    // 
-    // for (_i = 0, _len = result.length; _i < _len; _i++) {
-    //   item = result[_i];
-    //   if (typeof io !== "undefined" && io !== null) {
-    //     console.log(item);
-    //     //io.sockets.emit('chart', {
-    //     //  chartData: item
-    //     //});
-    //   }
-    // }
   });
 };
 
