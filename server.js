@@ -11,6 +11,7 @@ var methodOverride = require('method-override');
 var path = require('path');
 var io = require('socket.io');
 var moment = require('moment');
+var exec = require('child_process').exec
 
 
 /**
@@ -109,8 +110,40 @@ this.getCpus = function (socket) {
 };
 
 
+getFramebuffer = function(callback) {
+  client.listDevices()
+    .then(function(devices) {
+      return Promise.filter(devices, function(device) {
+        client.framebuffer(device.id, 'jpg')
+          .then(function(frame) {
+            console.log(frame);
+            return callback(frame)
+          })
+      })
+    })
+    .catch(function(err) {
+      console.error('Something went wrong:', err.stack)
+    });
+};
 
 
+this.getScreenshot = function (frame) {
+  return getFramebuffer(function(result) {
+    console.log(result);
+  });
+};
+
+
+var mjpeg;
+
+mjpeg = exec('',
+  function (error, stdout, stderr) {
+    console.log('stdout: ' + stdout);
+    console.log('stderr: ' + stderr);
+    if (error !== null) {
+      console.log('exec error: ' + error);
+    }
+});
 
 /**
  * Start Express server.
@@ -122,9 +155,8 @@ if (!module.parent) {
 }
 
 listener.sockets.on('connection', function(socket) {
-
   _this.getCpus(socket);
-
   return socket.on('disconnect', function() {});
 });
 
+//setInterval(getFramebuffer, 1000);

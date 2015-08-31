@@ -1,7 +1,7 @@
 var Promise = require('bluebird');
 var adb = require('adbkit');
 var readline = require('readline');
-
+var fs = require('fs');
 
 var client = adb.createClient();
 
@@ -43,6 +43,60 @@ battery
 */
 
 
+var index = 0;
+
+client.listDevices(function(err, devices) {
+  devices.forEach(function(device) {
+    client.framebuffer(device.id, "raw", function(err, info, fb_data) {
+      if(err) {
+        console.log("screencapture failed @", device.id, ":", err);
+        return;
+      }
+      
+      console.log(info);
+      var pngname = device.id+"-"+index+'.png';
+      index += 1;
+      var stream = fs.createWriteStream(pngname);
+      fb_data.pipe(stream);
+    });
+  });
+});
+
+
+
+
+
+/*
+client.listDevices()
+  .then(function(devices) {
+    return Promise.filter(devices, function(device) {
+
+      client.framebuffer(device.id, "raw", function(err, info, fb_data) {
+        if(err) {
+          console.log("screencapture failed @", device.id, ":", err);
+          return;
+        }
+        console.log(info);
+        console.log(fb_data);
+        var pngname = device.id+'.raw';
+        var stream = fs.createWriteStream(pngname);
+        console.log(stream);
+        //fb_data.pipe(stream);
+      });
+
+        // client.framebuffer(device.id, 'raw')
+        //   .then(function(shot) {
+        //     console.log(shot);
+        // });
+    });
+  })
+  .catch(function(err) {
+    console.error('Something went wrong:', err.stack)
+  })
+*/
+
+
+/*
 client.listDevices()
   .then(function(devices) {
     return Promise.filter(devices, function(device) {
@@ -58,7 +112,7 @@ client.listDevices()
   .catch(function(err) {
     console.error('Something went wrong:', err.stack)
   })
-
+*/
 
 
 /**
