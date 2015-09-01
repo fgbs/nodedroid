@@ -17,13 +17,10 @@
   <div class="row">
     <div class="col-lg-6" ng-repeat="cpu in cpus">
       <rd-widget>
+        <rd-widget-header title="{{ cpu.label }}">
+        </rd-widget-header>
         <rd-widget-body>
-          <canvas id="cpu.name" class="chart chart-line" 
-            data="cpu.data" labels="cpu.labels" series="cpu.series" 
-            options="cpu.options" 
-            legend="true" click="onClick">
-          </canvas>
-          <linechart data="data" options="options" mode="" width="" height=""></linechart>
+          <linechart data="cpu.data" options="cpu.options" height="200"></linechart>
         </rd-widget-body>
       </rd-widget>
     </div>

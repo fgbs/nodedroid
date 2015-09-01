@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('App', ['ui.bootstrap', 'ui.router', 'ngCookies', 'chart.js', 'socket.io']);
+angular.module('App', ['ui.bootstrap', 'ui.router', 'ngCookies', 'socket.io', 'n3-line-chart']);
 
 /**
  * Route configuration for the RDash module.

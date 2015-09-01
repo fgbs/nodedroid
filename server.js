@@ -95,21 +95,21 @@ this.getCpus = function (socket) {
       for (var key in proc) {
         point = {
           cpu: key,
-          time: moment().unix(),
+          time: new Date(), //moment().format(),
           metric: {
             'user': proc[key]['user'],
             'system': proc[key]['system'],
             'iowait': proc[key]['iowait']
           }
         }
-        console.log(point)
+        //console.log(point)
         socket.emit('cpu', point);
       }
     })
   });
 };
 
-
+/*
 getFramebuffer = function(callback) {
   client.listDevices()
     .then(function(devices) {
@@ -133,7 +133,6 @@ this.getScreenshot = function (frame) {
   });
 };
 
-
 var mjpeg;
 
 mjpeg = exec('',
@@ -144,6 +143,8 @@ mjpeg = exec('',
       console.log('exec error: ' + error);
     }
 });
+*/
+
 
 /**
  * Start Express server.

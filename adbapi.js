@@ -42,58 +42,62 @@ battery
 
 */
 
-
+/*
 var index = 0;
 
 client.listDevices(function(err, devices) {
   devices.forEach(function(device) {
-    client.framebuffer(device.id, "raw", function(err, info, fb_data) {
+    client.framebuffer(device.id, "raw", function(err, fb_data) {
       if(err) {
         console.log("screencapture failed @", device.id, ":", err);
         return;
       }
       
-      console.log(info);
-      var pngname = device.id+"-"+index+'.png';
-      index += 1;
-      var stream = fs.createWriteStream(pngname);
-      fb_data.pipe(stream);
+      fb_data.on('drain', function(data) {
+        console.log(data);
+      });
+      
+
+      //var pngname = device.id+"-"+index+'.png';
+      //index += 1;
+      //var stream = fs.createWriteStream(pngname);
+      //fb_data.pipe(stream);
     });
   });
 });
-
-
-
-
-
-/*
-client.listDevices()
-  .then(function(devices) {
-    return Promise.filter(devices, function(device) {
-
-      client.framebuffer(device.id, "raw", function(err, info, fb_data) {
-        if(err) {
-          console.log("screencapture failed @", device.id, ":", err);
-          return;
-        }
-        console.log(info);
-        console.log(fb_data);
-        var pngname = device.id+'.raw';
-        var stream = fs.createWriteStream(pngname);
-        console.log(stream);
-        //fb_data.pipe(stream);
-      });
-
-        // client.framebuffer(device.id, 'raw')
-        //   .then(function(shot) {
-        //     console.log(shot);
-        // });
-    });
-  })
-  .catch(function(err) {
-    console.error('Something went wrong:', err.stack)
-  })
 */
+
+
+getFramebuffer = function (callback) {
+  client.listDevices()
+    .then(function(devices) {
+      return Promise.filter(devices, function(device) {
+        client.framebuffer(device.id, "raw")
+          .then(function(fb_data) {
+            //console.log(fb_data);
+            return callback(fb_data);
+          });
+          //var pngname = device.id+'.raw';
+          //var stream = fs.createWriteStream(pngname);
+          //console.log(stream);
+          //fb_data.pipe(stream);
+        });
+    })
+    .catch(function(err) {
+      console.error('Something went wrong:', err.stack)
+    })
+}
+
+getScreenshot = function () {
+  return getFramebuffer(function(result) {
+    result.on('read', function(data) {
+      console.log(data);
+    });
+  });
+};
+
+
+getScreenshot();
 
 
 /*

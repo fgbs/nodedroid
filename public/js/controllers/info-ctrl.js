@@ -6,50 +6,60 @@ angular.module('App')
   .controller('InfoCtrl', ['$scope', '$socket', InfoCtrl]);
 
 function InfoCtrl($scope, $socket) {
+  var colors = d3.scale.category10();
   var lastCore = null;
   $scope.cpus = [];
-
-  var core = {
-    name: '',
-    labels: [],
-    series: [],
-    data: [],
-    options: {animation: false}
-  };
 
   var addCore = function (data) {
     if (data['cpu'] == lastCore) {
       // append
-      console.log('append');
-
+      for (var cpu=0; cpu < $scope.cpus.length; cpu++) {
+        if ($scope.cpus[cpu]['label'] == data['cpu']) {
+          var point = {
+            x: data['time']
+          }
+          for (var key in data['metric']) {
+            point[key] = data['metric'][key];
+          }
+          $scope.cpus[cpu]['data'].push(point);
+          console.log($scope.cpus[cpu]);
+        }
+      }
     } else {
       // insert
-      var labels = [];
-      var series = [];
       var points = [];
+      var series = [];
 
-      for (var key in data['metric']) {
-        labels.push(data['time']);
-        series.push(key);
-        var point = [data['metric'][key]];
-        points.push(point);
+      var point = {
+        x: data['time']
       }
+      for (var key in data['metric']) {
+        point[key] = data['metric'][key];
+        series.push({
+          axis: 'y',
+          type: 'line',
+          y: key,
+          label: key,
+          color: colors(Math.floor(Math.random() * (10 - 1 + 1) + 1))
+        })
+      }
+      points.push(point);
 
-      console.log({
-        name: data['cpu'],
-        labels: labels,
-        series: series,
+      $scope.cpus.push({
+        label: data['cpu'],
+        dataType: 'timed',
         data: points,
-        options: {animation: false}
+        options: {
+          axes: {
+            x: {key: 'x', type: 'date'},
+            y: {type: 'linear'}
+          },
+          series: series,
+          tooltip: {mode: 'scrubber', formatter: function(x, y, series) {
+            return moment(x).fromNow() + ' : ' + y;
+          }}
+        }
       });
-
-      // $scope.cpus.push({
-      //   name: data['cpu'],
-      //   labels: labels,
-      //   series: series,
-      //   data: points,
-      //   options: {animation: false}
-      // })
       lastCore = data['cpu'];
     }
   }
