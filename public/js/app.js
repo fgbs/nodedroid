@@ -1,6 +1,9 @@
 'use strict';
 
-angular.module('App', ['ui.bootstrap', 'ui.router', 'ngCookies', 'socket.io', 'n3-line-chart']);
+angular.module('App', [
+  'ui.bootstrap', 'ui.router', 'ngCookies', 
+  'socket.io', 'n3-line-chart',
+  'ngTable']);
 
 /**
  * Route configuration for the RDash module.
@@ -21,9 +24,9 @@ angular.module('App')
           url: '/screen',
           templateUrl: 'partials/screen.html'
         })
-        .state('proxy', {
-          url: '/proxy',
-          templateUrl: 'partials/proxy.html'
+        .state('package', {
+          url: '/package',
+          templateUrl: 'partials/package.html'
         })
         .state('term', {
           url: '/term',
