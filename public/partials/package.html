@@ -1,0 +1,28 @@
+<div ng-controller="PkgCtrl">
+  <!-- Header Bar -->
+  <div class="row header">
+    <div class="col-xs-12">
+      <div class="meta">
+        <div class="page">
+          Package
+        </div>
+        <div class="breadcrumb-links">
+          Home / Package
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End Header Bar -->
+
+  <div class="row">
+    <div class="col-lg-6" ng-repeat="cpu in cpus">
+      <rd-widget>
+        <rd-widget-header title="{{ cpu.label }}">
+        </rd-widget-header>
+        <rd-widget-body>
+          <linechart data="cpu.data" options="cpu.options" height="200"></linechart>
+        </rd-widget-body>
+      </rd-widget>
+    </div>
+  </div>
+</div>
