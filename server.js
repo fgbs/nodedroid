@@ -12,6 +12,7 @@ var path = require('path');
 var io = require('socket.io');
 var moment = require('moment');
 var exec = require('child_process').exec
+var favicon = require('serve-favicon');
 
 
 /**
@@ -21,6 +22,8 @@ var Promise = require('bluebird');
 var adb = require('adbkit');
 var readline = require('readline');
 var client = adb.createClient();
+
+var adbapi = require('./adbapi.js');
 
 var _this = this;
 
@@ -41,6 +44,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(favicon(__dirname + '/public/img/favicon.ico'));
 app.locals.pretty = false;
 
 
@@ -70,7 +74,7 @@ app.use(errorHandler({
 }));
 
 
-
+//console.log(adbapi);
 
 // get cpu stats
 getProcStat = function(callback) {
@@ -102,7 +106,7 @@ this.getCpus = function (socket) {
             'iowait': proc[key]['iowait']
           }
         }
-        //console.log(point)
+        console.log(point)
         socket.emit('cpu', point);
       }
     })

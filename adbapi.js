@@ -1,10 +1,27 @@
-var Promise = require('bluebird');
-var adb = require('adbkit');
-var readline = require('readline');
-var fs = require('fs');
+(function() {
+  var Promise = require('bluebird');
+  var adb = require('adbkit');
+  var readline = require('readline');
+  var fs = require('fs');
 
-var client = adb.createClient();
+  AdbApi = (function() {
+    function AdbApi(options) {
+      var opts = options || {};
+      var client = adb.createClient();
+    };
 
+    AdbApi.connect = function(options) {
+      
+      return 
+    };
+
+    return AdbApi;
+
+  })();
+
+  module.exports = AdbApi;
+
+}).call(this);
 
 
 /*
@@ -67,7 +84,7 @@ client.listDevices(function(err, devices) {
 });
 */
 
-
+/*
 getFramebuffer = function (callback) {
   client.listDevices()
     .then(function(devices) {
