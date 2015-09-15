@@ -13,60 +13,84 @@ function InfoCtrl($scope, $socket) {
   var addCore = function (data) {
     if (data['cpu'] == lastCore) {
       // append
-      for (var cpu=0; cpu < $scope.cpus.length; cpu++) {
-        if ($scope.cpus[cpu]['label'] == data['cpu']) {
-          var point = {
-            x: data['time']
+      var points = [];
+
+      for (var key in data['metric']) {
+        //console.log(data['metric'][key]);
+        var point = {}
+        var value = []
+
+        value.push([
+          data['metric'][key]['time'], 
+          data['metric'][key]['value']
+        ]);
+        
+        point[data['metric'][key]['key']] = value
+
+        console.log(point);
+        points.push(point);
+      }
+
+      for (var cpu = 0; cpu < $scope.cpus.length; cpu++) {
+        if ($scope.cpus[cpu]['label'] == lastCore) {
+          var dat = $scope.cpus[cpu]['data'];
+          console.log(lastCore + ': ');
+          for (var D in dat) {
+            for (var P in dat[D]) {
+              //console.log(points);
+              //console.log(dat[D][P]);
+            }
           }
-          for (var key in data['metric']) {
-            point[key] = data['metric'][key];
-          }
-          $scope.cpus[cpu]['data'].push(point);
-          console.log($scope.cpus[cpu]);
         }
       }
+      //console.log(points);
+
     } else {
       // insert
       var points = [];
-      var series = [];
 
-      var point = {
-        x: data['time']
-      }
       for (var key in data['metric']) {
-        point[key] = data['metric'][key];
-        series.push({
-          axis: 'y',
-          type: 'line',
-          y: key,
-          label: key,
-          color: colors(Math.floor(Math.random() * (10 - 1 + 1) + 1))
-        })
+        //console.log(data['metric'][key]);
+        var point = {
+          'key': data['metric'][key]['key'],
+          'values': []
+        }
+        point['values'].push([
+          data['metric'][key]['time'], 
+          data['metric'][key]['value']
+        ])
+        points.push(point);
       }
-      points.push(point);
 
       $scope.cpus.push({
         label: data['cpu'],
-        dataType: 'timed',
-        data: points,
-        options: {
-          axes: {
-            x: {key: 'x', type: 'date'},
-            y: {type: 'linear'}
-          },
-          series: series,
-          tooltip: {mode: 'scrubber', formatter: function(x, y, series) {
-            return moment(x).fromNow() + ' : ' + y;
-          }}
-        }
+        data: points
       });
+
+      /*
+      for (var key in data['metric']) {
+        var point = {
+          'key': key,
+          'values': []
+        };
+        point['values'].push([data['metric']['time'], data['metric'][key]])
+        points.push(point);
+      }
+
+      console.log(points);
+
+      $scope.cpus.push({
+        label: data['cpu'],
+        data: points
+      });
+      */
+
       lastCore = data['cpu'];
+      console.log(lastCore);
     }
   }
 
   $socket.on('cpu', function (data) {
-    //$scope.serverResponse = data;
-    //console.log(data);
     addCore(data);
   });
 

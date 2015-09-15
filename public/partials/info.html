@@ -14,11 +14,11 @@
   </div>
   <!-- End Header Bar -->
 
-<div class="row alerts-container" data-ng-controller="AlertsCtrl" data-ng-show="alerts.length">
+<!--div class="row alerts-container" data-ng-controller="AlertsCtrl" data-ng-show="alerts.length">
   <div class="col-xs-12">
     <alert data-ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
   </div>
-</div>
+</div-->
 
   <div class="row">
     <div class="col-lg-6" ng-repeat="cpu in cpus">
@@ -26,7 +26,15 @@
         <rd-widget-header title="{{ cpu.label }}">
         </rd-widget-header>
         <rd-widget-body>
-          <linechart data="cpu.data" options="cpu.options" height="200"></linechart>
+          <nvd3-line-chart
+            data="cpu.data"
+            id="cpu.label"
+            width="550"
+            height="350"
+            showXAxis="true"
+            showYAxis="true">
+              <svg></svg>
+          </nvd3-line-chart>
         </rd-widget-body>
       </rd-widget>
     </div>

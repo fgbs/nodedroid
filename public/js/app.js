@@ -2,7 +2,7 @@
 
 angular.module('App', [
   'ui.bootstrap', 'ui.router', 'ngCookies', 
-  'socket.io', 'n3-line-chart',
+  'socket.io', 'nvd3ChartDirectives', 
   'ngTable']);
 
 /**

@@ -97,14 +97,22 @@ this.getCpus = function (socket) {
   return getProcStat(function(result) {
     result.on('load', function (proc) {
       for (var key in proc) {
-        point = {
+        var time = moment().unix();
+        var point = {
           cpu: key,
-          time: new Date(), //moment().format(),
-          metric: {
-            'user': proc[key]['user'],
-            'system': proc[key]['system'],
-            'iowait': proc[key]['iowait']
-          }
+          metric: [{
+            'key': 'user',
+            'time': time,
+            'value': proc[key]['user']
+          },{
+            'key': 'system',
+            'time': time,
+            'value': proc[key]['system']
+          },{
+            'key': 'iowait',
+            'time': time,
+            'value': proc[key]['iowait']
+          }]
         }
         console.log(point)
         socket.emit('cpu', point);
