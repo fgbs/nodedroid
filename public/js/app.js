@@ -36,4 +36,48 @@ angular.module('App')
   ])
   .config(function ($socketProvider) {
     $socketProvider.setConnectionUrl('http://localhost:3000');
+  })
+  .config(function ($provide) {
+    $provide.decorator('$rootScope', function ($delegate) {
+        var rootScope = $delegate;
+
+        Object.defineProperty(rootScope.constructor.prototype, '$bus', {
+            get: function get() {
+                var _this = this;
+
+                return {
+                    publish: function publish(msg, data) {
+                        data = data || {};
+                        // emit goes to parents, broadcast goes down to children
+                        // since rootScope has no parents, this is the least noisy approach
+                        // however, with the caveat mentioned below
+                        rootScope.$emit(msg, data);
+                    },
+                    subscribe: function subscribe(msg, func) {
+                        // ignore the event.  Just want the data
+                        var unbind = rootScope.$on(msg, function (event, data) {
+                            return func(data);
+                        });
+                        // being able to enforce unbinding here is why decorating rootscope
+                        // is preferred over DI of an explicit bus service
+                        _this.$on('$destroy', unbind);
+                    }
+                };
+            }
+        });
+
+        Object.defineProperty(rootScope.constructor.prototype, '$smartWatch', {
+            get: function get() {
+                var _this2 = this;
+
+                return function (expression, handler) {
+                    return _this2.$watch(expression, function (newValue, oldValue) {
+                        if (oldValue !== newValue) handler();
+                    }, true);
+                };
+            }
+        });
+
+        return rootScope;
+    });
   });

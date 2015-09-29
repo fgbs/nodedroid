@@ -3,7 +3,8 @@
  */
 
 angular.module('App')
-  .controller('PkgCtrl', ['$scope', '$socket', PkgCtrl]);
+  .controller('PkgCtrl', ['$scope', PkgCtrl]);
 
-function PkgCtrl($scope, $socket) {
+function PkgCtrl($scope, FileUploader) {
+
 };

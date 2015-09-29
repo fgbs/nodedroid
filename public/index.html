@@ -31,17 +31,23 @@
   <!-- endbuild -->
   <!-- SCRIPTS -->
   <!-- build:js lib/js/main.min.js -->
+  <script type="text/javascript" src="vendor/jquery/jquery.min.js"></script>
   <script type="text/javascript" src="vendor/angular/angular.min.js"></script>
   <script type="text/javascript" src="vendor/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
   <script type="text/javascript" src="vendor/angular-cookies/angular-cookies.min.js"></script>
   <script type="text/javascript" src="vendor/angular-ui-router/angular-ui-router.min.js"></script>
 
+  <!-- info graph -->
   <script type="text/javascript" src="vendor/d3/d3.min.js"></script>
   <script type="text/javascript" src="vendor/nvd3/nv.d3.min.js"></script>
   <script type="text/javascript" src="vendor/angularjs-nvd3-directives/angularjs-nvd3-directives.min.js"></script>
 
+  <!-- package -->
   <link rel="stylesheet" type="text/css" href="vendor/ng-table/ng-table.min.css">
   <script type="text/javascript" src="vendor/ng-table/ng-table.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="vendor/bootstrap-fileinput/fileinput.min.css">
+  <script type="text/javascript" src="vendor/bootstrap-fileinput/fileinput.js"></script>
+  <script type="text/javascript" src="vendor/bootstrap-fileinput/fileinput_locale_es.js"></script>
 
   <script type="text/javascript" src="/socket.io/socket.io.js"></script>
   <!-- endbuild -->
@@ -50,8 +56,10 @@
   <script type="text/javascript" src="js/controllers/master-ctrl.js"></script>
   <script type="text/javascript" src="js/controllers/alert-ctrl.js"></script>
   <script type="text/javascript" src="js/controllers/info-ctrl.js"></script>
+  <script type="text/javascript" src="js/controllers/package-ctrl.js"></script>
   <script type="text/javascript" src="js/directives/loading.js"></script>
   <script type="text/javascript" src="js/directives/widget.js"></script>
+  <script type="text/javascript" src="js/directives/bootstrap-file-input-directive.js"></script>
   <script type="text/javascript" src="js/services/socket.js"></script>
 </head>
 <body ng-controller="MasterCtrl">
