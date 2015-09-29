@@ -13,7 +13,7 @@ var io = require('socket.io');
 var moment = require('moment');
 var exec = require('child_process').exec
 var favicon = require('serve-favicon');
-
+var bus = require('simplebus').createBus(1000);
 
 /**
  * ADB Magic
@@ -23,7 +23,8 @@ var adb = require('adbkit');
 var readline = require('readline');
 var client = adb.createClient();
 
-var adbapi = require('./adbapi.js');
+var adbapi = require('./modules/adbapi.js');
+var adb = adbapi();
 
 var _this = this;
 
@@ -74,88 +75,10 @@ app.use(errorHandler({
 }));
 
 
-//console.log(adbapi);
-
-// get cpu stats
-getProcStat = function(callback) {
-  client.listDevices()
-    .then(function(devices) {
-      return Promise.filter(devices, function(device) {
-          client.openProcStat(device.id)
-              .then(function(procs) {
-                return callback(procs);
-              })
-      })
-    })
-    .catch(function(err) {
-      console.error('Something went wrong:', err.stack)
-    });
-};
-
-
-this.getCpus = function (socket) {
-  return getProcStat(function(result) {
-    result.on('load', function (proc) {
-      for (var key in proc) {
-        var time = moment().unix();
-        var point = {
-          cpu: key,
-          metric: [{
-            'key': 'user',
-            'time': time,
-            'value': proc[key]['user']
-          },{
-            'key': 'system',
-            'time': time,
-            'value': proc[key]['system']
-          },{
-            'key': 'iowait',
-            'time': time,
-            'value': proc[key]['iowait']
-          }]
-        }
-        console.log(point)
-        socket.emit('cpu', point);
-      }
-    })
-  });
-};
-
-/*
-getFramebuffer = function(callback) {
-  client.listDevices()
-    .then(function(devices) {
-      return Promise.filter(devices, function(device) {
-        client.framebuffer(device.id, 'jpg')
-          .then(function(frame) {
-            console.log(frame);
-            return callback(frame)
-          })
-      })
-    })
-    .catch(function(err) {
-      console.error('Something went wrong:', err.stack)
-    });
-};
-
-
-this.getScreenshot = function (frame) {
-  return getFramebuffer(function(result) {
-    console.log(result);
-  });
-};
-
-var mjpeg;
-
-mjpeg = exec('',
-  function (error, stdout, stderr) {
-    console.log('stdout: ' + stdout);
-    console.log('stderr: ' + stderr);
-    if (error !== null) {
-      console.log('exec error: ' + error);
-    }
-});
-*/
+/**
+ * start tracking device
+ */
+adb.trackDevices(bus);
 
 
 /**
@@ -168,8 +91,15 @@ if (!module.parent) {
 }
 
 listener.sockets.on('connection', function(socket) {
-  _this.getCpus(socket);
+  // messages from UI
+  socket.on('down', function(data) {
+    bus.post(data);
+  });
+
+  // messages to UI
+  bus.subscribe(null, function(msg) {
+    socket.emit('up', msg);
+  })
+
   return socket.on('disconnect', function() {});
 });
-
-//setInterval(getFramebuffer, 1000);

@@ -3,9 +3,9 @@
  */
 
 angular.module('App')
-    .controller('MasterCtrl', ['$scope', '$cookieStore', MasterCtrl]);
+  .controller('MasterCtrl', ['$scope', '$cookieStore', '$socket', MasterCtrl]);
 
-function MasterCtrl($scope, $cookieStore) {
+function MasterCtrl($scope, $cookieStore, $socket) {
   /**
    * Sidebar Toggle & Cookie Control
    */
@@ -45,4 +45,12 @@ function MasterCtrl($scope, $cookieStore) {
       $scope.$apply();
     }
   };
+
+  $socket.on('up', function (data) {
+    $scope.$bus.publish(data.topic, data);
+  });
+
+  $scope.$bus.subscribe('device.action', function(data) {
+    $socket.emit('down', data);
+  });
 };

@@ -2,7 +2,8 @@
  * Info page controller
  */
 
-angular.module('App')
+angular
+  .module('App')
   .controller('InfoCtrl', ['$scope', '$socket', InfoCtrl]);
 
 function InfoCtrl($scope, $socket) {
