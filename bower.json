@@ -36,6 +36,10 @@
     "n3-line-chart": "~1.1.11",
     "ng-file-upload-shim": "~7.0.15",
     "ng-file-upload": "~7.0.15",
-    "ng-table": "~0.8.3"
+    "ng-table": "~0.8.3",
+    "angular-file-upload": "~2.1.4",
+    "bootstrap-fileinput": "~4.2.7",
+    "postal": "~1.0.7",
+    "postal.diagnostics": "~0.7.4"
   }
 }
