@@ -72,29 +72,37 @@ AdbApi.prototype.startNetwork = function() {
   console.log('Starting network');
   var _this = this;
 
-  procs.exec('', function(error, stdout, stderr) {
-    console.log('stdout', stdout);
-    console.log('stderr', stderr);
-    console.log('error', error);
+  var child = procs.spawn('services/network/droid_net.sh');
+
+  child.stdout.on('data', function (data) {
+    console.log('stdout: ' + data);
   });
 
-  this.client.waitForDevice(this.device_id)
-    .then(function(device) {
-        _this.client.shell(device, 'su -c "ip route add default via 10.0.0.1"')
-          .then(adb.util.readAll)
-            .then(function(output) {
-              console.log('[%s] %s', device, output.toString().trim())
-            })
+  child.stderr.on('data', function (data) {
+    console.log('stderr: ' + data);
+  });
 
-        _this.client.shell(device, 'su -c ndc resolver setnetdns ppp0 "" 8.8.8.8 8.8.8.4')
-          .then(adb.util.readAll)
-            .then(function(output) {
-              console.log('[%s] %s', device, output.toString().trim())
-            })
-    })
-    .catch(function(err) {
-      console.error('Something went wrong:', err.stack)
-    });
+  child.on('close', function (code) {
+    console.log('child process exited with code ' + code);
+  });
+
+  // this.client.waitForDevice(this.device_id)
+  //   .then(function(device) {
+  //       _this.client.shell(device, 'su -c "ip route add default via 10.0.0.1"')
+  //         .then(adb.util.readAll)
+  //           .then(function(output) {
+  //             console.log('[%s] %s', device, output.toString().trim())
+  //           })
+
+  //       _this.client.shell(device, 'su -c ndc resolver setnetdns ppp0 "" 8.8.8.8 8.8.8.4')
+  //         .then(adb.util.readAll)
+  //           .then(function(output) {
+  //             console.log('[%s] %s', device, output.toString().trim())
+  //           })
+  //   })
+  //   .catch(function(err) {
+  //     console.error('Something went wrong:', err.stack)
+  //   });
 };
 
 AdbApi.prototype.startScreen = function() {
